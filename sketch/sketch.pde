@@ -69,8 +69,6 @@ void draw()
     
     String message = notify.toString();
     client.write(message);
-    
-    
   }
   
   sendUpdateX = false;

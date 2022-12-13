@@ -22,7 +22,13 @@ void draw()
   {
     JSONObject input = parseJSONObject(available_client.readString());
     print(input.toString());
-    /*
+    
+    
+  }
+}
+
+
+/*
     JSONObject input = parseJSONObject(available_client.readString());
     String computer_name = input.getString("computer-name");
     String leaving_name = input.getJSONObject("event").getString("leaving");
@@ -45,5 +51,3 @@ void draw()
       output.setString("y","");
     } 
     */
-  }
-}
