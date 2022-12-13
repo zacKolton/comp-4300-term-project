@@ -21,6 +21,10 @@ String entering_name = "test_client_v2";
 boolean sendUpdateX = false;
 boolean sendUpdateY = false;
 
+// Communication
+
+int new_message;
+
 void setup()
 {
   size(300, 300);
@@ -37,46 +41,11 @@ void setup()
 void draw() 
 {
   background(background);
-  
-  
-  // Update the position of the shape
-  xpos = xpos + ( xspeed * xdirection );
-  ypos = ypos + ( yspeed * ydirection );
-  
-  // Test to see if the shape exceeds the boundaries of the screen
-  // If it does, reverse its direction by multiplying by -1
-  
-  if (xpos > width+rad || xpos < -rad) {
-    sendUpdateX = true;
-    xdirection *= -1;
-  }
-  if (ypos > height-rad || ypos < rad) {
-    sendUpdateY = true;
-    ydirection *= -1;
-  }
-  if(sendUpdateX)
+  if(client.available() > 0)
   {
-    JSONObject notify = new JSONObject();
-    JSONObject event = new JSONObject();
-    event.setString("leaving-name",computer_name);
-    event.setString("entering-name",entering_name);
-    event.setFloat("x-pos", xpos);
-    event.setFloat("y-pos",ypos);
-    event.setInt("x-dir", xdirection);
-    event.setInt("y-dir", ydirection);
-    notify.setString("computer-name",computer_name);
-    notify.setJSONObject("event", event);
-    
-    String message = notify.toString();
-    client.write(message);
-    
     
   }
   
-  sendUpdateX = false;
-  sendUpdateY = false;
-  // Draw the shape
-  ellipse(xpos, ypos, rad, rad);
-  fill(ballColor);
+  
 }
   

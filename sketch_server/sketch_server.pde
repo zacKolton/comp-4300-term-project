@@ -11,7 +11,7 @@ void setup() {
   
   size(200, 200);
   // Starts a myServer on port 5204
-  myServer = new Server(this, 5204); 
+  myServer = new Server(this,5204, "192.168.1.15"); 
 }
 
 void draw() 
