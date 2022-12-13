@@ -6,6 +6,8 @@ JSONObject curr_client;
 Client available_client;
 
 int rad = 20;
+float xspeed = 2;  // Speed of the shape
+float yspeed = 2;  // Speed of the shape
 
 
 void setup() {
@@ -31,6 +33,9 @@ void draw()
     float ypos = input.getFloat("ypos");
     int xdir = input.getInt("xdir");
     int ydir = input.getInt("ydir");
+    
+    xpos = xpos + ( xspeed * xdir );
+    ypos = ypos + ( yspeed * ydir );
     
     JSONObject output = new JSONObject();
     output.setString("reciever_name", reciever);

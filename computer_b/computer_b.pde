@@ -59,7 +59,6 @@ void draw()
     if(xpos < -rad)
     {
       sendUpdateX = true;
-      xdir *= -1;
     }
     
     if (xpos > width+rad) { 
@@ -67,12 +66,11 @@ void draw()
     }
     
     if (ypos > height-rad || ypos < rad) {
-      sendUpdateY = true;
       ydir *= -1;
     }
   }
   
-   if(!sendUpdateY && sendUpdateX)
+  if(sendUpdateX)
   {
     JSONObject notify = new JSONObject();
     notify.setString("sender_name",computer_name);
@@ -85,4 +83,10 @@ void draw()
     String message = notify.toString();
     client.write(message);
   }
+  else
+  {
+    ellipse(xpos, ypos, rad, rad);
+    fill(ballColor);
+  }
+  sendUpdateX = false;
 }

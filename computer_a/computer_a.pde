@@ -52,7 +52,6 @@ void draw()
     ypos = server_message.getFloat("ypos");
     xdir = server_message.getInt("xdir");
     ydir = server_message.getInt("ydir");
-    draw = true;
   }
   else
   {
@@ -86,8 +85,12 @@ void draw()
     client.write(message);
     
   }
+  else
+  {
     ellipse(xpos, ypos, rad, rad);
     fill(ballColor);
+  }
+  
   sendUpdateX = false;
   
 }
