@@ -5,11 +5,13 @@ JSONObject settings;
 JSONObject curr_client;
 Client available_client;
 
+int rad = 20;
+
 
 void setup() {
   settings = loadJSONObject("../settings.json");
   
-  size(200, 200);
+  size(300, 300);
   // Starts a myServer on port 5204
   myServer = new Server(this,5204, "192.168.1.15"); 
 }
@@ -23,7 +25,31 @@ void draw()
     JSONObject input = parseJSONObject(available_client.readString());
     print(input.toString());
     
+    String sender = input.getString("sender_name");
+    String reciever = input.getString("reciever_name");
+    float xpos = input.getFloat("xpos");
+    float ypos = input.getFloat("ypos");
+    int xdir = input.getInt("xdir");
+    int ydir = input.getInt("ydir");
     
+    JSONObject output = new JSONObject();
+    output.setString("reciever_name", reciever);
+    
+    if(sender.equals("computer_a"))
+    {
+      xpos = -rad
+    }
+    
+    if(sender.equals("computer_b")
+    {
+      xpos = width + rad // change this "width" later
+    }
+    output.setFloat("xpos",xpos);
+    output.setFloat("ypos",ypos);
+    output.setInt("xdir",xdir);
+    output.setInt("ydir",ydir);
+    
+    myServer.write(output.toString());
   }
 }
 
