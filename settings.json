@@ -1,0 +1,14 @@
+{
+    "computer-a": {
+        "link1": null,
+        "link2": "computer-b"
+    },
+    "computer-b": {
+        "link1": "computer-a",
+        "link2": "computer-c"
+    },
+    "computer-c": {
+        "link1":"computer-b",
+        "link2": null
+    }
+}
