@@ -42,12 +42,12 @@ void draw()
     
     if(sender.equals("computer_a"))
     {
-      xpos = -rad
+      xpos = -rad;
     }
     
-    if(sender.equals("computer_b")
+    if(sender.equals("computer_b"))
     {
-      xpos = width + rad // change this "width" later
+      xpos = width + rad; // change this "width" later
     }
     output.setFloat("xpos",xpos);
     output.setFloat("ypos",ypos);

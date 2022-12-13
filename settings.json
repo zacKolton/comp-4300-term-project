@@ -1,14 +1,12 @@
 {
-    "computer-a": {
-        "link1": null,
-        "link2": "computer-b"
-    },
-    "computer-b": {
-        "link1": "computer-a",
-        "link2": "computer-c"
-    },
-    "computer-c": {
-        "link1":"computer-b",
-        "link2": null
-    }
+    "window-width":500,
+    "window-height":300,
+    "ball-radius": 20,
+    "ball-color":"00000",
+    "background-color":"CED4DA",
+    "x-speed": 2,
+    "y-speed": 2,
+    "ip":"192.168.1.15",
+    "port":5204,
+    "frame-rate": 40
 }
