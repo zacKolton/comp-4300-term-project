@@ -47,6 +47,8 @@ void draw()
           output.setString("left",left_computer);
           output.setString("right",right_computer);
           done = true;
+          myServer.write(output.toString());
+          print(output.toString());
         }
       }
     }
@@ -76,9 +78,10 @@ void draw()
        output.setFloat("xpos",xpos);
        output.setString("instruction","coordinates");
        output.setFloat("ypos",ypos);
+       myServer.write(output.toString());
+       print(output.toString());
     }
-    myServer.write(output.toString());
-    print(output.toString());
+    
   }
 }
 
@@ -97,6 +100,7 @@ void startAnimation()
     output.setString("sender","Server");
     output.setString("reciever", computer_names.getJSONObject(0).getString("name"));
     output.setString("instruction", "begin");
+    myServer.write(output.toString());
     print(output.toString());
   }
 }
