@@ -5,6 +5,8 @@ JSONArray computer_names;    // List of computer names - configured by the user
 
 String computer_name;        // Name of [this] computer/frame
 String ip_address;           // Ref. settings
+String left_computer;        // Ref. settings - adjacent computer (if any)
+String right_computer;       // Ref. settings - adjacent computer (if any)
 
 float xpos;                  // x-axis value for ball
 float ypos;                  // y-axis value for ball
@@ -13,10 +15,9 @@ float yspeed;                // Ref. settings - vertical speed
 
 int radius;                  // Ref. settings - ball radius
 int port;                    // Ref. settings - "server" address
-int window_width;            // Ref. settings - display width 
-int window_height;           // Ref. settings - display height
+int window_width;            // 
+int window_height;           // 
 int frame_rate;              // Ref. settings - display frame rate
-int config_order;            // Ref. settings - relative location (for edges)
 int num_computers;           // 
 int xdir = 1;                // Starting direction (Left or Right)
 int ydir = 1;                // Starting direction (Up or Down)
@@ -26,35 +27,14 @@ color background = 0xCED4DA; // Grey"ish"
 
 Client client;               // Client to interact with server
 
-void applySettings()
-{
-  settings       = loadJSONObject("../settings.json");
-  xspeed         = settings.getFloat("x-speed");
-  yspeed         = settings.getFloat("y-speed");
-  radius         = settings.getInt("ball-radius");
-  port           = settings.getInt("port");
-  ip_address     = settings.getString("ip");
-  window_width   = settings.getInt("window-width");
-  window_height  = settings.getInt("window-height");
-  frame_rate     = settings.getInt("frame-rate");
-  computer_names = settings.getJSONArray("computer-configuration");
-  
-  for(int i = 0; i < computer_names.size(); i++)
-  {
-    if(!computer_names.getJSONObject(i).getBoolean("in-use"))
-    {
-      computer_name = computer_names.getJSONObject(i).getString("name");
-      config_order = i;
-      computer_names.getJSONObject(i).setBoolean("in-use",true);
-    }
-  }
-}
+
 
 void setup()
 {
+  size(200, 200);
   applySettings();
   
-  size(window_width, window_height);
+  
   noStroke();
   frameRate(frame_rate);
   ellipseMode(RADIUS);
@@ -62,38 +42,69 @@ void setup()
   xpos = window_width/2;
   ypos = window_height/2;
   client = new Client(this, ip_address, port);
+  noLoop();
 }
 
 void draw() 
 {
   background(background);
-  if(xpos > window_width + radius && xdir > 0 && config_order < computer_names.size() - 1)
+  boolean hasLeft = left_computer != null;
+  boolean hasRight= right_computer != null;
+  
+  drawBall(xpos, ypos);
+  
+  if(xpos < -radius && xdir < 0)
   {
+    if(hasLeft)
+    {
+      notifyServer(xpos, ypos, xdir, ydir, left_computer);
+      noLoop();
+    }
+    else
+    {
+      xdir *= -1;
+    }
+  }
+  
+  if(xpos > width + radius && xdir > 0)
+  {
+    if(hasRight)
+    {
+      notifyServer(xpos, ypos, xdir, ydir, right_computer);
+      noLoop();
+    }
+    else
+    {
+      xdir *= -1;
+    }
+  }
+  
+  if (ypos > window_height-radius || ypos < radius) 
+  {
+      ydir *= -1;
+  }
+  
+  xpos = xpos + ( xspeed * xdir );
+  ypos = ypos + ( yspeed * ydir );
+  
+}
+
+void drawBall(float xpos, float ypos)
+{
+  ellipse(xpos, ypos, radius, radius);
+  fill(ballColor);
+}
+
+void notifyServer(float xpos, float ypos, int xdir, int ydir, String target)
+{
     JSONObject notify = new JSONObject();
     notify.setFloat("xpos",xpos);
     notify.setFloat("ypos",ypos);
     notify.setInt("ydir",ydir);
+    notify.setint("xdir",xdir
     notify.setString("sender",computer_name);
+    notify.setString("target", target);
     client.write(notify.toString());
-    noLoop();
-  }
-  else
-  {
-    xpos = xpos + ( xspeed * xdir );
-    ypos = ypos + ( yspeed * ydir );
-    
-    if(xpos - radius == 0)
-    {
-      xdir *= -1;
-    }
-    
-    if (ypos > window_height-radius || ypos < radius) 
-    {
-      ydir *= -1;
-    }
-    ellipse(xpos, ypos, radius, radius);
-    fill(ballColor);
-  }
 }
 
 void clientEvent(Client c)
@@ -104,7 +115,36 @@ void clientEvent(Client c)
     xpos = server_message.getFloat("xpos");
     ypos = server_message.getFloat("ypos");
     ydir = server_message.getInt("ydir");
-    xdir *= -1;
+    xdir = server_message.getInt("xdir");
     loop();
   }
+}
+
+void applySettings()
+{
+  settings       = loadJSONObject("../settings.json");
+  xspeed         = settings.getFloat("x-speed");
+  yspeed         = settings.getFloat("y-speed");
+  radius         = settings.getInt("ball-radius");
+  port           = settings.getInt("port");
+  ip_address     = settings.getString("ip");
+  window_width   = width;
+  window_height  = height;
+  frame_rate     = settings.getInt("frame-rate");
+  computer_names = settings.getJSONArray("computer-configuration");
+  
+  boolean done = false;
+  for(int i = 0; i < computer_names.size() && !done; i++)
+  {
+    if(!computer_names.getJSONObject(i).getBoolean("in-use"))
+    {
+      computer_name = computer_names.getJSONObject(i).getString("name");
+      computer_names.getJSONObject(i).setBoolean("in-use",true);
+      left_computer = computer_names.getJSONObject(i).getString("left");
+      right_computer = computer_names.getJSONObject(i).getString("right");
+      done = true;
+    }
+  }
+  settings.setJSONArray("computer-configuration",computer_names);
+  saveJSONObject(settings,"../settings.json");
 }
