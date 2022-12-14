@@ -8,22 +8,22 @@
   "ip": "192.168.1.15",
   "computer-configuration": [
     {
+      "left": "",
       "name": "computer_a",
-      "in-use": false,
       "right": "computer_b",
-      "left": null
+      "in-use": true
     },
     {
+      "left": "computer_a",
       "name": "computer_b",
-      "in-use": false,
       "right": "computer_c",
-      "left": "computer_a"
+      "in-use": false
     },
     {
+      "left": "computer_b",
       "name": "computer_c",
-      "in-use": false,
-      "right": null,
-      "left": "computer_b"
+      "right": "",
+      "in-use": false
     }
   ],
   "ball-color": "00000",

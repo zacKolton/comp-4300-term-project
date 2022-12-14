@@ -48,8 +48,8 @@ void setup()
 void draw() 
 {
   background(background);
-  boolean hasLeft = left_computer != null;
-  boolean hasRight= right_computer != null;
+  boolean hasLeft = !left_computer.equals("");
+  boolean hasRight= !right_computer.equals("");
   
   drawBall(xpos, ypos);
 
@@ -101,7 +101,7 @@ void notifyServer(float xpos, float ypos, int xdir, int ydir, String target)
     notify.setFloat("xpos",xpos);
     notify.setFloat("ypos",ypos);
     notify.setInt("ydir",ydir);
-    notify.setint("xdir",xdir);
+    notify.setInt("xdir",xdir);
     notify.setString("sender",computer_name);
     notify.setString("target", target);
     client.write(notify.toString());
@@ -112,6 +112,21 @@ void clientEvent(Client c)
   JSONObject server_message = parseJSONObject(c.readString());
   if(server_message.getString("reciever").equals(computer_name))
   {
+    if(server_message.getString("instruction") != null)
+    {
+      if(server_message.getString("instruction").equals("begin"))
+      {
+        loop();
+      }
+      else if(server_message.getString("instruction").equals("end"))
+      {
+        noLoop();
+      }
+      else
+      {
+        print("server message error");
+      }
+    }
     xpos = server_message.getFloat("xpos");
     ypos = server_message.getFloat("ypos");
     ydir = server_message.getInt("ydir");

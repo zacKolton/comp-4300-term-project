@@ -12,7 +12,7 @@ String ip_address;           // Ref. settings
 
 void setup() {
   size(300, 300);
-  applySettings()
+  applySettings();
   
   myServer = new Server(this,5204, "192.168.1.15"); 
 }
@@ -53,13 +53,28 @@ void draw()
   }
 }
 
+void mouseClicked()
+{
+  startAnimation();
+}
+
+void startAnimation()
+{
+  JSONObject output = new JSONObject();
+  
+  JSONArray computer_names = settings.getJSONArray("computer-configuration");
+  if(computer_names.getJSONObject(0).getBoolean("in-use"))
+  {
+    output.setString("sender","Server");
+    output.setString("reciever", computer_names.getJSONObject(0).getString("name"));
+    output.setString("instruction", "begin");
+  }
+}
+
 void applySettings()
 {
   settings       = loadJSONObject("../settings.json");
   radius         = settings.getInt("ball-radius");
   port           = settings.getInt("port");
   ip_address     = settings.getString("ip");
-  window_width   = width;
-  window_height  = height;
-  computer_names = settings.getJSONArray("computer-configuration");
 }
