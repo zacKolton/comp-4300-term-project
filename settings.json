@@ -8,5 +8,19 @@
     "y-speed": 2,
     "ip":"192.168.1.15",
     "port":5204,
-    "frame-rate": 40
+    "frame-rate": 40,
+    "computer-configuration": [
+        {
+            "name":"computer_a",
+            "in-use": false
+        },
+        {
+            "name":"computer_b",
+            "in-use": false
+        },
+        {
+            "name":"computer_c",
+            "in-use": false
+        }
+    ]
 }

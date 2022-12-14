@@ -1,37 +1,73 @@
 import processing.net.*;
 
-String computer_name = "computer_a";
+JSONObject settings;         // Basic program settings stored in .json
+JSONArray computer_names;    // List of computer names - configured by the user
 
-float xpos;
-float ypos;    // Starting position of shape    
-float xspeed = 4;  // Speed of the shape
-float yspeed = 4;  // Speed of the shape
+String computer_name;        // Name of [this] computer/frame
+String ip_address;           // Ref. settings
 
-int rad = 20;        // Width of the shape
-int xdir = 1;  // Left or Right
-int ydir = 1;  // Top to Bottom
+float xpos;                  // x-axis value for ball
+float ypos;                  // y-axis value for ball
+float xspeed;                // Ref. settings - horizontal speed
+float yspeed;                // Ref. settings - vertical speed
 
-color ballColor = 0x00000;
-color background = 0xCED4DA;
+int radius;                  // Ref. settings - ball radius
+int port;                    // Ref. settings - "server" address
+int window_width;            // Ref. settings - display width 
+int window_height;           // Ref. settings - display height
+int frame_rate;              // Ref. settings - display frame rate
+int config_order;            // Ref. settings - relative location (for edges)
+int num_computers;           // 
+int xdir = 1;                // Starting direction (Left or Right)
+int ydir = 1;                // Starting direction (Up or Down)
 
-Client client;
+color ballColor = 0x00000;   // Black
+color background = 0xCED4DA; // Grey"ish"
+
+Client client;               // Client to interact with server
+
+void applySettings()
+{
+  settings       = loadJSONObject("../settings.json");
+  xspeed         = settings.getFloat("x-speed");
+  yspeed         = settings.getFloat("y-speed");
+  radius         = settings.getInt("ball-radius");
+  port           = settings.getInt("port");
+  ip_address     = settings.getString("ip");
+  window_width   = settings.getInt("window-width");
+  window_height  = settings.getInt("window-height");
+  frame_rate     = settings.getInt("frame-rate");
+  computer_names = settings.getJSONArray("computer-configuration");
+  
+  for(int i = 0; i < computer_names.size(); i++)
+  {
+    if(!computer_names.getJSONObject(i).getBoolean("in-use"))
+    {
+      computer_name = computer_names.getJSONObject(i).getString("name");
+      config_order = i;
+      computer_names.getJSONObject(i).setBoolean("in-use",true);
+    }
+  }
+}
 
 void setup()
 {
-  size(1500, 600);
+  applySettings();
+  
+  size(window_width, window_height);
   noStroke();
-  frameRate(40);
+  frameRate(frame_rate);
   ellipseMode(RADIUS);
   
-  xpos = width/2;
-  ypos = height/2;
-  client = new Client(this, "192.168.1.15", 5204);
+  xpos = window_width/2;
+  ypos = window_height/2;
+  client = new Client(this, ip_address, port);
 }
 
 void draw() 
 {
   background(background);
-  if(xpos > width + rad && xdir > 0)
+  if(xpos > window_width + radius && xdir > 0 && config_order < computer_names.size() - 1)
   {
     JSONObject notify = new JSONObject();
     notify.setFloat("xpos",xpos);
@@ -46,17 +82,16 @@ void draw()
     xpos = xpos + ( xspeed * xdir );
     ypos = ypos + ( yspeed * ydir );
     
-    if(xpos - rad == 0)
+    if(xpos - radius == 0)
     {
       xdir *= -1;
     }
     
-    if (ypos > height-rad || ypos < rad) 
+    if (ypos > window_height-radius || ypos < radius) 
     {
       ydir *= -1;
     }
-    
-    ellipse(xpos, ypos, rad, rad);
+    ellipse(xpos, ypos, radius, radius);
     fill(ballColor);
   }
 }
@@ -72,5 +107,4 @@ void clientEvent(Client c)
     xdir *= -1;
     loop();
   }
-  
 }
