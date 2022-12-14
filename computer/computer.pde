@@ -25,6 +25,9 @@ int ydir = 1;                // Starting direction (Up or Down)
 color ballColor = 0x00000;   // Black
 color background = 0xCED4DA; // Grey"ish"
 
+boolean hasLeft;
+boolean hasRight;
+
 Client client;               // Client to interact with server
 
 
@@ -33,7 +36,7 @@ void setup()
 {
   size(200, 200);
   applySettings();
-  askForConfig();
+  
   
   noStroke();
   frameRate(frame_rate);
@@ -42,14 +45,14 @@ void setup()
   xpos = window_width/2;
   ypos = window_height/2;
   client = new Client(this, ip_address, port);
+  askForConfig();
   noLoop();
 }
 
 void draw() 
 {
   background(background);
-  boolean hasLeft = !left_computer.equals("");
-  boolean hasRight= !right_computer.equals("");
+  
   
   drawBall(xpos, ypos);
 
@@ -58,7 +61,7 @@ void draw()
   
   if(xpos < -radius && xdir < 0)
   {
-    if(hasLeft)
+    if(!left_computer.equals(""))
     {
       notifyServer(xpos, ypos, xdir, ydir, left_computer);
       noLoop();
@@ -71,7 +74,7 @@ void draw()
   
   if(xpos > width + radius && xdir > 0)
   {
-    if(hasRight)
+    if(!right_computer.equals(""))
     {
       notifyServer(xpos, ypos, xdir, ydir, right_computer);
       noLoop();
@@ -138,7 +141,6 @@ void clientEvent(Client c)
         computer_name = server_message.getString("name");
         left_computer = server_message.getString("left");
         right_computer = server_message.getString("right");
-        print("recieved config from server");
       }
       else if(server_message.getString("instruction").equals("coordinates"))
       {
@@ -150,6 +152,7 @@ void clientEvent(Client c)
       }
     }
   }
+  print(server_message.toString());
 }
 
 void applySettings()

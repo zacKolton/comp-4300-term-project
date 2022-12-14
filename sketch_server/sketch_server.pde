@@ -48,11 +48,10 @@ void draw()
           output.setString("right",right_computer);
           done = true;
         }
-        
       }
     }
     
-    if(input.getString("request-type").equals("coordinates")
+    if(input.getString("request-type").equals("coordinates"))
     {
       String sender = input.getString("sender");
       String target = input.getString("target");
@@ -80,7 +79,6 @@ void draw()
     }
     myServer.write(output.toString());
     print(output.toString());
-    
   }
 }
 
