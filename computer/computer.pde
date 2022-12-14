@@ -52,6 +52,9 @@ void draw()
   boolean hasRight= right_computer != null;
   
   drawBall(xpos, ypos);
+
+  xpos = xpos + ( xspeed * xdir );
+  ypos = ypos + ( yspeed * ydir );
   
   if(xpos < -radius && xdir < 0)
   {
@@ -84,9 +87,6 @@ void draw()
       ydir *= -1;
   }
   
-  xpos = xpos + ( xspeed * xdir );
-  ypos = ypos + ( yspeed * ydir );
-  
 }
 
 void drawBall(float xpos, float ypos)
@@ -101,7 +101,7 @@ void notifyServer(float xpos, float ypos, int xdir, int ydir, String target)
     notify.setFloat("xpos",xpos);
     notify.setFloat("ypos",ypos);
     notify.setInt("ydir",ydir);
-    notify.setint("xdir",xdir
+    notify.setint("xdir",xdir);
     notify.setString("sender",computer_name);
     notify.setString("target", target);
     client.write(notify.toString());
