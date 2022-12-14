@@ -11,7 +11,7 @@
       "left": "",
       "name": "computer_a",
       "right": "computer_b",
-      "in-use": true
+      "in-use": false
     },
     {
       "left": "computer_a",

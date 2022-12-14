@@ -5,8 +5,8 @@ JSONArray computer_names;    // List of computer names - configured by the user
 
 String computer_name;        // Name of [this] computer/frame
 String ip_address;           // Ref. settings
-String left_computer;        // Ref. settings - adjacent computer (if any)
-String right_computer;       // Ref. settings - adjacent computer (if any)
+String left_computer;        
+String right_computer;       
 
 float xpos;                  // x-axis value for ball
 float ypos;                  // y-axis value for ball
@@ -33,7 +33,7 @@ void setup()
 {
   size(200, 200);
   applySettings();
-  
+  askForConfig();
   
   noStroke();
   frameRate(frame_rate);
@@ -95,6 +95,15 @@ void drawBall(float xpos, float ypos)
   fill(ballColor);
 }
 
+void askForConfig()
+{
+  JSONObject output = new JSONObject();
+  output.setString("request-type","getConfig");
+  output.setString("name",computer_name);
+  client.write(output.toString());
+  print(output.toString());
+}
+
 void notifyServer(float xpos, float ypos, int xdir, int ydir, String target)
 {
     JSONObject notify = new JSONObject();
@@ -104,7 +113,9 @@ void notifyServer(float xpos, float ypos, int xdir, int ydir, String target)
     notify.setInt("xdir",xdir);
     notify.setString("sender",computer_name);
     notify.setString("target", target);
+    notify.setString("request-type","coordinates");
     client.write(notify.toString());
+    print(notify.toString());
 }
 
 void clientEvent(Client c)
@@ -122,16 +133,22 @@ void clientEvent(Client c)
       {
         noLoop();
       }
-      else
+      else if(server_message.getString("instruction").equals("config"))
       {
-        print("server message error");
+        computer_name = server_message.getString("name");
+        left_computer = server_message.getString("left");
+        right_computer = server_message.getString("right");
+        print("recieved config from server");
+      }
+      else if(server_message.getString("instruction").equals("coordinates"))
+      {
+        xpos = server_message.getFloat("xpos");
+        ypos = server_message.getFloat("ypos");
+        ydir = server_message.getInt("ydir");
+        xdir = server_message.getInt("xdir");
+        loop();
       }
     }
-    xpos = server_message.getFloat("xpos");
-    ypos = server_message.getFloat("ypos");
-    ydir = server_message.getInt("ydir");
-    xdir = server_message.getInt("xdir");
-    loop();
   }
 }
 
@@ -146,20 +163,5 @@ void applySettings()
   window_width   = width;
   window_height  = height;
   frame_rate     = settings.getInt("frame-rate");
-  computer_names = settings.getJSONArray("computer-configuration");
-  
-  boolean done = false;
-  for(int i = 0; i < computer_names.size() && !done; i++)
-  {
-    if(!computer_names.getJSONObject(i).getBoolean("in-use"))
-    {
-      computer_name = computer_names.getJSONObject(i).getString("name");
-      computer_names.getJSONObject(i).setBoolean("in-use",true);
-      left_computer = computer_names.getJSONObject(i).getString("left");
-      right_computer = computer_names.getJSONObject(i).getString("right");
-      done = true;
-    }
-  }
-  settings.setJSONArray("computer-configuration",computer_names);
-  saveJSONObject(settings,"../settings.json");
+  computer_name  = str(random(0,1000));
 }
