@@ -1,26 +1,32 @@
 {
-    "window-width":500,
-    "window-height":300,
-    "ball-radius": 20,
-    "ball-color":"00000",
-    "background-color":"CED4DA",
-    "x-speed": 2,
-    "y-speed": 2,
-    "ip":"192.168.1.15",
-    "port":5204,
-    "frame-rate": 40,
-    "computer-configuration": [
-        {
-            "name":"computer_a",
-            "in-use": false
-        },
-        {
-            "name":"computer_b",
-            "in-use": false
-        },
-        {
-            "name":"computer_c",
-            "in-use": false
-        }
-    ]
+  "background-color": "CED4DA",
+  "window-width": 200,
+  "ball-radius": 20,
+  "port": 5204,
+  "window-height": 200,
+  "y-speed": 2,
+  "ip": "192.168.1.15",
+  "computer-configuration": [
+    {
+      "name": "computer_a",
+      "in-use": false,
+      "right": "computer_b",
+      "left": null
+    },
+    {
+      "name": "computer_b",
+      "in-use": false,
+      "right": "computer_c",
+      "left": "computer_a"
+    },
+    {
+      "name": "computer_c",
+      "in-use": false,
+      "right": null,
+      "left": "computer_b"
+    }
+  ],
+  "ball-color": "00000",
+  "x-speed": 2,
+  "frame-rate": 40
 }
