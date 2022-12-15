@@ -2,13 +2,17 @@
 
 ### How to run 
 1. Download Processing
-2. Configure settings.json
+2. Configure `settings.json`
+   - Set IP address, port
+   - Configure the computers/displays
 3. Start the server
 4. In the same order as the computer-configuration array, start the clients
 5. Confirm all clients are running (and waiting)
 6. Click on the server drawing pane to begin
 
 [Video demo](https://youtu.be/hR8Z2p5LOx4)
+
+NOTE: You do not need multiple computers to use this, it can be run on one computer. However it sort of defeats the purpose of the project.
 
 ### Example Configuration
 ```json
