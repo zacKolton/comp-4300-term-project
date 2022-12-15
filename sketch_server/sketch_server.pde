@@ -14,7 +14,7 @@ void setup() {
   size(300, 300);
   applySettings();
   
-  myServer = new Server(this,5204, "192.168.1.15"); 
+  myServer = new Server(this,port, ip_address); 
 }
 
 void draw() 
