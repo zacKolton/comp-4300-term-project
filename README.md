@@ -8,6 +8,8 @@
 5. Confirm all clients are running (and waiting)
 6. Click on the server drawing pane to begin
 
+[Video demo](https://youtu.be/hR8Z2p5LOx4)
+
 ### Example Configuration
 ```json
 "computer-configuration": [
