@@ -1,5 +1,4 @@
 {
-  "background-color": "CED4DA",
   "window-width": 200,
   "ball-radius": 20,
   "port": 5204,
@@ -26,7 +25,6 @@
       "in-use": false
     }
   ],
-  "ball-color": "00000",
   "x-speed": 2,
   "frame-rate": 40
 }
