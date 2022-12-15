@@ -52,8 +52,6 @@ void setup()
 void draw() 
 {
   background(background);
-  
-  
   drawBall(xpos, ypos);
 
   xpos = xpos + ( xspeed * xdir );
